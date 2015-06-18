@@ -13,7 +13,7 @@ Install
 Requirements:
 - Python 3.4+
 
-Installing:
+Installing: (Notice, not pushed to PyPi yet, so see Contributing for installation)
 
 ``$ pip3 install artemis-core``
 
@@ -36,7 +36,7 @@ Contributing
 =======================
 Install:
 
-``$ git clone ``
+``$ git clone git@github.com:DevinCarr/artemis-core.git``
 ``$ cd artemis-core``
 ``$ pip3 install -e .``
 
