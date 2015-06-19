@@ -1,9 +1,11 @@
 import sys
 import json
 import shlex
-import subprocess
+from subprocess import Popen, PIPE
 import os
+import test
 from .command import Command
+from .tests import TestFrame
 
 class Core:
     def __init__(self, version):
@@ -15,10 +17,12 @@ class Core:
                     ('quit',Command('quit','import sys; sys.exit(0)','Quit Artemis.'))]
         self.commands = dict(default)
         self.version = version
+        self.out = ""
 
     def op(self,message):
         if message is not None:
-            print('Arty> {0}'.format(message))
+            print(str(message))
+            return message
 
     def ip(self,message=''):
         return input('Arty: {0}'.format(message))
@@ -30,14 +34,16 @@ class Core:
             check = args[0]
         for command in keys:
             if args[0] == command:
-                self.op(self.commands[command].execute(args))
+                self.out = self.commands[command].execute(args)
                 return True
         return False
 
     def check_bash(self,args):
+        """Check bash for the command"""
         try:
-            with subprocess.Popen(args) as process:
+            with Popen(args,stdout=PIPE) as process:
                 out, err = process.communicate()
+                self.out = out[:-1].decode('utf8')
         except OSError:
             # file/program doesn't exist
             return False
@@ -50,15 +56,22 @@ class Core:
         else:
             return True
 
-    def ask_question(self):
-        question = self.ip()
+    def ask_question(self,question=None):
+        """Prompts the user for input"""
+        self.out = ""
+        if question is None:
+            question = self.ip()
         args = shlex.split(question)
         found = self.check_commands(args)
         if not found:
             if not self.check_bash(args):
                 self.op('Command not found: {}'.format(args[0]))
+                return False
+        self.op(self.out)
+        return True
 
     def list_commands(self,args):
+        """List all of the currently loaded arty-commands"""
         self.op('Artemis\'s current command list:')
         for command in self.commands:
             self.commands[command].help()
@@ -85,3 +98,7 @@ class Core:
             os.chdir(args)
         except FileNotFoundError:
             self.op('No such file or directory: \'{}\''.format(args))
+
+    def run_tests(self):
+        testing = TestFrame(self)
+        return testing.run_all()
