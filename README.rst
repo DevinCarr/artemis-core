@@ -1,3 +1,5 @@
+.. image:: https://travis-ci.org/DevinCarr/artemis-core.svg?branch=master
+    :target: https://travis-ci.org/DevinCarr/artemis-core
 Artemis-Core (Arty)
 =======================
 This is the core module and shell runtime for Arty.
