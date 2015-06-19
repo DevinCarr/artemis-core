@@ -37,7 +37,9 @@ Contributing
 Install:
 
 ``$ git clone git@github.com:DevinCarr/artemis-core.git``
+
 ``$ cd artemis-core``
+
 ``$ pip3 install -e .``
 
 
