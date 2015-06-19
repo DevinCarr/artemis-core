@@ -1,12 +1,12 @@
 import sys
 from .core import Core
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 def main():
     """Entry point for artemis-core"""
     arty = Core(VERSION)
     if len(sys.argv) > 1:
-        if sys.argv[1] == '--test':
+        if sys.argv[1] == 'test':
             return arty.run_tests()
     while True:
         try:

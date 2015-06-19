@@ -7,11 +7,18 @@ class TestFrame:
             self.test_internal_commands_1,
             self.test_internal_commands_2,
             self.test_internal_commands_3,
-            self.test_directory_change
+            self.test_directory_change,
+            self.test_create_new_command
             ]
 
     def eq(self,obj1,obj2):
         return obj1 == obj2
+
+    def gt(self,obj1,obj2):
+        return obj1 > obj2
+
+    def lt(self,obj1,obj2):
+        return obj1 < obj2
 
     def run_all(self):
         """Run all of the tests
@@ -20,20 +27,22 @@ class TestFrame:
         """
         print('RUNNING ARTEMIS-CORE TESTS: ALL')
         print('===============================')
-        # try:
-        for test in self.tests:
-            if not test():
-                print('FAILED: {0}'.format(test.__name__))
-                self.error_code = 1
-                break
-        # except Exception:
-        #     print('EXCEPTION CAUGHT!!')
-        #     return self.error_code
-        # else:
-        if self.error_code == 0:
-            print('===============================')
-            print('{} TESTS PASSED'.format(len(self.tests)))
-        return self.error_code
+        try:
+            for test in self.tests:
+                if not test():
+                    print('FAILED: {0}'.format(test.__name__))
+                    self.error_code = 1
+                    break
+        except Exception:
+            print('EXCEPTION CAUGHT!!')
+            print('STDOUT: {}'.format(self.artemis_core.out))
+            print('STDERR: {}'.format(self.artemis_core.err))
+            return self.error_code
+        else:
+            if self.error_code == 0:
+                print('===============================')
+                print('{} TESTS PASSED'.format(len(self.tests)))
+            return self.error_code
 
     def test_internal_commands_1(self):
         """Check that echo 1 returns '1'"""
@@ -52,5 +61,12 @@ class TestFrame:
         """Checks to make sure the internal cd can change directories properly"""
         self.artemis_core.ask_question('cd ..')
         self.artemis_core.ask_question('pwd')
-        print(os.getcwd())
         return self.eq(os.getcwd(),self.artemis_core.out)
+
+    def test_create_new_command(self):
+        """Check for creating new commands"""
+        before = len(self.artemis_core.commands.command_list)
+        self.artemis_core.ask_question('newc pr "print(1)" "print a one"')
+        self.artemis_core.ask_question('pr')
+        after = len(self.artemis_core.commands.command_list)
+        return self.gt(after,before)
