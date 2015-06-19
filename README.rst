@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/DevinCarr/goarxiv.svg)](https://travis-ci.org/DevinCarr/goarxiv)
 Artemis-Core (Arty)
 =======================
 This is the core module and shell runtime for Arty.
