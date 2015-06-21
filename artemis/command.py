@@ -56,7 +56,10 @@ class Acmd:
         return result
 
     def disp_help(self):
-        io.op('{:s}\t - {:s}'.format(self.name,self.helpm))
+        if type(self.helpm) != str:
+            io.op('{:s}\t - {:s}'.format(self.name,self.helpm()))
+        else:
+            io.op('{:s}\t - {:s}'.format(self.name,self.helpm))
 
 def print_help(args):
     """Print the help message"""

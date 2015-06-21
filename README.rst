@@ -1,5 +1,6 @@
 .. image:: https://travis-ci.org/DevinCarr/artemis-core.svg?branch=master
     :target: https://travis-ci.org/DevinCarr/artemis-core
+
 Artemis-Core (Arty)
 =======================
 This is the core module and shell runtime for Arty.
@@ -31,8 +32,35 @@ Example commands
 
 ``quit``: Quit out of Arty
 
-*Note: Any normal command within Bash can be executed. If Arty doesn't understand
+\*Note: Any normal command within Bash can be executed. If Arty doesn't understand
  the command, the command will be passed to Bash to be executed.
+
+Plugin Commands
+=======================
+Run ``add <github link>`` within Arty to download and load a plugin.
+The plugin module will be stored within the ``~/.artemis/`` folder.
+
+Folder Structure of plugin:
+
+\\folder
+
+  \\module_name
+
+    __init__.py
+
+    file.py
+
+  \\tests
+
+    test1.py
+
+    test2.py
+
+Arty will then load the command as "module_name".
+The ``__init__.py`` for the plugin module will have to have two functions:
+``def execute(args):`` which will take a list of arguments, if any are passed.
+And: ``def help_message():`` which takes no parameters and should return a string
+that is a short help for the module's execute function.
 
 Contributing
 =======================
