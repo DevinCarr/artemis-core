@@ -48,7 +48,7 @@ class Acmd:
         result = None
         passing = args
         if type(args) is list and len(args) > 1:
-            passing = args[1:]
+            passing = args
         if type(self.function) == str:
             result = exec(self.function)
         else:

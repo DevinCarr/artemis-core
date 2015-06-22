@@ -11,7 +11,7 @@ def ip(message=''):
     return input('^Arty: {0}'.format(message))
 
 def change_directory(args):
-    if type(args) is list:
+    if type(args) is list and args:
         args = args[0]
     try:
         os.chdir(args)

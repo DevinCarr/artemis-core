@@ -24,9 +24,13 @@ class Loader:
 
     def add_module(self,args):
         """Take a github link and download the module into the FOLDERSTORE"""
-        if len(args):
-            cmd = "git clone {} {}".format(args[0],self.FOLDERSTORE).split(' ')
+        if args:
+            folder = '{}/{}'.format(self.FOLDERSTORE,args[0].split('/')[-1].split('.')[0])
+            cmd = 'git clone {} {}'.format(args[0],folder).split(' ')
             self.core.check_bash(cmd)
+            self.load_modules()
+        else:
+            io.op('No plugin url provided')
 
     def load_modules(self):
         """Check extra modules loaded into the FOLDERSTORE"""
@@ -34,20 +38,36 @@ class Loader:
         # Add all of the modules to the path
         for item in list_of_imports:
             path = '{0}/{1}'.format(self.FOLDERSTORE,item)
-            inner_folders = os.listdir(path)
-            module_name = inner_folders[0]
-            if len(inner_folders) > 1:
-                inner_folders.remove('tests')
-                module_name = inner_folders[0]
+            inner_items = os.listdir(path)
+            module_name = ''
+            items = [x for x in inner_items if self.check_item(x)]
+
+            if len(items) > 1:
+                io.op('Import: {} could not be loaded because the module couldn\'t be found'.format(path))
+                print(items)
+            else:
+                module_name = items[0]
             sys.path.append(path)
             # Import the new module
             module = importlib.import_module(module_name)
             self.add_command(module.__name__,module.execute,module.help_message)
             io.op('Imported: {}'.format(module_name))
 
+    def check_item(self,item):
+        if item.find('.') != -1:
+            return False
+        elif item.find('LICENSE') != -1:
+            return False
+        elif item.find('README') != -1:
+            return False
+        elif item.find('tests') != -1:
+            return False
+        else:
+            return True
+
     def add_command(self,name,func,helpm):
         self.core.commands.create_command([name,func,helpm])
 
     def add_loader_commmands(self):
-        new_command = ["add",self.add_module,"Add a new module from github"]
+        new_command = ["get",self.add_module,"Add a new module from github"]
         self.core.commands.create_command(new_command)

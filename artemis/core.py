@@ -15,22 +15,22 @@ class Core:
 
     def check_commands(self,args):
         keys = self.commands.command_list.keys()
-        check = args
+        check = args[0]
         if type(args) is list:
             check = args[0]
         for command in keys:
-            if args[0] == command:
-                self.commands.command_list[command].execute(args)
+            if check == command:
+                self.commands.command_list[command].execute(args[1:])
                 return True
         return False
 
     def check_bash(self,args):
         """Check bash for the command"""
         try:
-            with Popen(args,stdout=PIPE) as process:
+            with Popen(args,stdout=PIPE,stderr=PIPE) as process:
                 out, err = process.communicate()
                 self.out = out[:-1].decode('utf8')
-                self.err = err
+                self.err = err.decode('utf8')
         except OSError as e:
             self.err = e
             return False
