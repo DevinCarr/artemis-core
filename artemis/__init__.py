@@ -1,7 +1,7 @@
 import sys
 from .core import Core
 from .loader import Loader
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 
 def main():
     """Entry point for artemis-core"""
